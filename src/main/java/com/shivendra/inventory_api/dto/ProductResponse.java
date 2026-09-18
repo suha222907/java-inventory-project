@@ -1,46 +1,34 @@
-package com.shivendra.inventory_api.model;
+package com.shivendra.inventory_api.dto;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+public class ProductResponse {
 
-@Entity
-@Table(name = "products")
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "Product name is required")
-    @Column(nullable = false)
     private String name;
-
     private String category;
-
-    @NotNull(message = "Price is required")
-    @PositiveOrZero(message = "Price must be zero or positive")
-    @Column(nullable = false)
     private Double price;
-
-    @NotNull(message = "Quantity is required")
-    @Min(value = 0, message = "Quantity cannot be negative")
-    @Column(nullable = false)
     private Integer quantity;
-
-    @Min(value = 0, message = "Reorder threshold cannot be negative")
     private Integer reorderThreshold;
 
-    public Product() {}
+    public ProductResponse() {}
 
-    public Product(String name, String category, Double price, Integer quantity, Integer reorderThreshold) {
+    public ProductResponse(Long id, String name, String category, Double price, Integer quantity, Integer reorderThreshold) {
+        this.id = id;
         this.name = name;
         this.category = category;
         this.price = price;
         this.quantity = quantity;
         this.reorderThreshold = reorderThreshold;
+    }
+
+    public static ProductResponse fromEntity(com.shivendra.inventory_api.model.Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getQuantity(),
+                product.getReorderThreshold()
+        );
     }
 
     public Long getId() { return id; }
